@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop, 'feature/**']  # Run on all branches
   pull_request:
     branches: [main]
 
@@ -29,9 +29,9 @@ jobs:
         run: pytest -v
 
   deploy:
-    needs: test  # Only deploy if tests pass
+    needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'  # Only on main branch
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
     steps:
       - name: Checkout repository
