@@ -36,9 +36,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Deploy to Hugging Face Spaces
-        uses: JacobLinCool/huggingface-spaces-action@v0.0.3
-        with:
-          hf_token: ${{ secrets.HF_TOKEN }}
-          space_name: SabGadkar/cicd_learn  # Replace with your HF username
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git remote add hf https://SabGadkar:$HF_TOKEN@huggingface.co/spaces/SabGadkar/cicd_learn
+          git push hf main:main --force
